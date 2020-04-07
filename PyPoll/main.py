@@ -11,7 +11,7 @@ dict_summary={}
 
 
 #Get the data from the source
-election_data_csv = os.path.join("Pypoll", "Resources", "election_data.csv")
+election_data_csv = os.path.join("election_data.csv")
 #Read the csv file
 with open(election_data_csv, newline='') as csvfile:
     csv_reader = csv.reader(csvfile, delimiter=',')
