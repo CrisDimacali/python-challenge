@@ -1,73 +1,71 @@
-import os
+# Modules
 import csv
-import Counter
+import os
 
-poll_df = os.path.join('Resources’, ‘election_data.csv’)
-
-total_candidate = []
-votes_count = []
-
-with open(poll_df) as csvfile:
-    csvreader = csv.reader(csvfile, delimiter=“,”)
-    csv_header = next (csvreader)
-
-    total_votes = (len(list(csvreader))
-
-    for row in csvreader:
-        total_candidate.append(str(row[2]))
-
-    total_candidate_count = {}
-    for candidate in total_candidate:
-    if candidate in total_candidate_count:
-        total_candidate_count[candidate] += 1
-    else:
-        total_candidate_count[candidate] = 1
-
-    votes_str = []
-    names = []
-    for key in total_candidate_count.keys():
-    votes_str.append(total_candidate_count[key])
-    names.append(str(key))
-
-    votes = []
-    votes_percent = []
-    for vote in votes:
-    votes_percent.append(round(vote / total_votes * 100, 3))
-    max_percent = max(votes_percent)
-    min_percent = min(votes_percent)
-
-    for i in range(len(votes_percent)):
-    if votes_percent[i] == max_percent:
-        winner = names[i]
-        winner_votes = int(votes[i])
-    # if votes_percent[i] == min_percent:
-    #     looser = names[i]
-    #     looser_votes = int(votes[i])
+# Create empty list for csv file
+polls=[]
+# Create empty dictionary to record only candidate names
+dict_polls={}
+# Create empty dictionaty to summarize the total number votes per candidate name
+dict_summary={}
 
 
-print(“Election Results”)
-print(f'------------------')
-print(“Total Votes: ” , total_votes)
-print(f'------------------')
-for i in range(len(names)):
-    print(f”{names[i]}: {votes_percent[i]}%  ({votes[i]})“)
-print(f'------------------')
-print(“Winner: “, winner)
-print(f'------------------')
+#Get the data from the source
+election_data_csv = os.path.join("Pypoll", "Resources", "election_data.csv")
+#Read the csv file
+with open(election_data_csv, newline='') as csvfile:
+    csv_reader = csv.reader(csvfile, delimiter=',')
+    #print(csv_reader)
+# Convert pollreader string to list 
+for row in csv_reader:
+    polls.append(row)
+       
+    # Convert polls list into dictionary for counting and grouping candidate names
+for row in polls:
+    name_key=row[1]
+    if name_key not in dict_polls:
+        # insert name_key into dictionary and initialize to 0
+        dict_polls[name_key]=0
+        # count the name key inside dictionary
+        dict_polls[name_key]+=1
+    
+    # Compute the percentages of each name key of dict_polls and insert into dict_summary
+total_polls=len(polls)
+for name in dict_polls:
+    dict_summary[name]=round((dict_polls[name]/total_polls)*100)
+        
+        
+    # Initialize the highest value to comapre
+highest=0
+    # Find larget value of the key/value pair inside dictionary and place the key name inside winner
+for name in dict_summary:
+    if highest < dict_summary[name]:
+        highest=dict_summary[name]
+        winner=name
+            
+    
+# Output to console
+print("Election Results")
+print("-------------------------") 
+print("Total Votes: "+str(len(polls)))
+print("-------------------------")
+print(str(name)+": "+str(dict_summary[name])+"% "+"("+str(dict_polls[name])+")")
+print("-------------------------")
+print("Winner: "+winner)
+print("-------------------------")
 
-# Print csv_header
-print(f'Financial Analysis')
-
-print(f'Total Months: {totalMonths}')
-print(f'Total:{netTotal}')
-
-# Write results to CSV output file
-output_path = os.path.join(‘..‘, ‘/Users/grinn/UCBWork/Python_Work/python_challenge/PayPoll/output’, ‘output_election_data.csv’)
-with open(output_path, ‘w’) as csvfile:
-    csvwriter = csv.writer(csvfile, delimiter =“,”)
-    csvwriter.writerow([‘Election Results’])
-    csvwriter.writerow([‘Total Votes:‘, total_votes])
-    csvwriter.writerow([])
-    for i in range(len(names)):
-        csvwriter.writerow([names[i], str(votes_percent[i])+‘%’, votes[i]])
-    csvwriter.writerow([“Winner: “, winner])
+#Output file
+election_outputfile = os.path.join("Pypoll", "election_output.txt")
+# Output to text file
+text_file=open(election_outputfile,"x")
+text_file.write("Election Results")
+text_file.write("\n-------------------------")
+text_file.write("\nTotal Votes: "+str(len(polls)))
+text_file.write("\n-------------------------")
+text_file.write("\n"+str(name)+": "+str(dict_summary[name])+"% "+"("+str(dict_polls[name])+")")
+text_file.write("\n-------------------------")
+text_file.write("\nWinner: "+winner)
+text_file.write("\n-------------------------")
+    
+# Close text file
+text_file.close()
