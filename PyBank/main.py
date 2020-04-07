@@ -3,7 +3,7 @@ import csv
 import os
 
 #Get the data from the source
-budget_data_csv = os.path.join("Resources", "budget_data.csv")
+budget_data_csv = os.path.join("budget_data.csv")
 #Read the csv file
 with open(budget_data_csv) as csvfile:
     csv_reader = csv.reader(csvfile, delimiter=',')
@@ -65,7 +65,7 @@ inputfile='\\Desktop\\Data Analytics\\python-challenge\\PyBank\\Resources\\budge
 outputfile='\\Desktop\\Data Analytics\\python-challenge\\PyBank\\budget_output.txt'
 
 # Output to text file and console
-text_file=open(outputfile,"budget_output")
+text_file=open(outputfile,"x")
 text_file.write('Financial Analysis')
 text_file.write('\n----------------------------')
 text_file.write('\nTotal Months: '+str(total_months))
